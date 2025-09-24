@@ -11,12 +11,12 @@ const getClientIp = (req: Request): string => {
     req.socket?.remoteAddress ||
     "unknown";
 
-  return ipKeyGenerator(ip); // ensures IPv6-safe keys
+  return ipKeyGenerator(ip);
 };
 
 export const globalRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit per IP
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   keyGenerator: getClientIp,
   standardHeaders: true,
   legacyHeaders: false,
@@ -27,8 +27,8 @@ export const globalRateLimiter = rateLimit({
 });
 
 export const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // stricter for login
+  windowMs: 15 * 60 * 1000,
+  max: 5,
   keyGenerator: getClientIp,
   standardHeaders: true,
   legacyHeaders: false,

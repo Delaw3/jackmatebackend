@@ -1,8 +1,11 @@
 import { createApp } from "./app";
 import { config } from "./config/config";
+import dbConnect from "./config/db.config";
 
 async function bootstrap() {
   try {
+
+    dbConnect()
     const app = createApp();
 
     const port = Number(config.port || 3000);
