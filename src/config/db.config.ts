@@ -1,14 +1,19 @@
 import mongoose from "mongoose";
 
- export const dbConnect = async () =>{
-    try {
-        const connect = await mongoose.connect(process.env.DB_STRING!);
-        console.log ("connected to " + connect.connection.name)
-        
-    } catch (error) {
-        console.log (error);
-        process.exit(1)
-    }
-}
+let isConnected = false; 
 
+export const dbConnect = async () => {
+  if (isConnected) {
+    return; 
+  }
 
+  try {
+    const db = await mongoose.connect(process.env.DB_STRING!);
+    isConnected = true;
+
+    console.log("Connected to DB:", db.connection.name);
+  } catch (error) {
+    console.error(" MongoDB connection error:", error);
+    throw error; // don’t exit, let Vercel handle gracefully
+  }
+};

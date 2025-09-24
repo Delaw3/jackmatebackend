@@ -1,10 +1,12 @@
-import { createApp } from "../src/app";   // path to your app.ts
+import { createApp } from "../src/app";
 import serverless from "serverless-http";
 import { dbConnect } from "../src/config/db.config";
 
-// Connect to DB once
-dbConnect();
-
 const app = createApp();
+
+app.use(async (req, res, next) => {
+  await dbConnect();
+  next();
+});
 
 export default serverless(app);
