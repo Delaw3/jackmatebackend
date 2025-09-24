@@ -1,7 +1,7 @@
 import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 import { Request } from "express";
 
-// Safely get client IP for rate limit keys (IPv4 & IPv6)
+// IPv6-safe key generator
 const getClientIp = (req: Request): string => {
   const ip =
     req.ip ||
@@ -11,16 +11,15 @@ const getClientIp = (req: Request): string => {
     req.socket?.remoteAddress ||
     "unknown";
 
-  // Use ipKeyGenerator helper for IPv6-safe key
-  return ipKeyGenerator(ip);
+  return ipKeyGenerator(ip); // ensures IPv6-safe keys
 };
 
 export const globalRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit per IP
+  keyGenerator: getClientIp,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: getClientIp,
   message: {
     title: "Too many requests",
     message: "You have exceeded the request limit. Please try again later.",
@@ -30,9 +29,9 @@ export const globalRateLimiter = rateLimit({
 export const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // stricter for login
+  keyGenerator: getClientIp,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: getClientIp,
   message: {
     title: "Too many login attempts",
     message: "Too many failed login attempts, please try again later.",
