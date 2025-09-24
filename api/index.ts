@@ -2,11 +2,11 @@ import { createApp } from "../src/app";
 import serverless from "serverless-http";
 import { dbConnect } from "../src/config/db.config";
 
+// Prevent double parsing
 const app = createApp();
+app.disable("x-powered-by");
 
-app.use(async (req, res, next) => {
-  await dbConnect();
-  next();
-});
+dbConnect();
 
-export default serverless(app);
+export const handler = serverless(app);
+export default handler;
