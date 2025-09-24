@@ -23,7 +23,7 @@ export const createApp = () => {
 
   // Morgan + Winston
   app.use(morganLogger);
-  app.use( loginLimiter, globalRateLimiter );
+  app.use( globalRateLimiter );
 
   app.use((req, res, next) => {
     console.log("Headers:", req.headers);
