@@ -1,8 +1,10 @@
 import { signUpUser } from "../controllers/auth.controller";
+import { validate } from "../middleware/validate";
 import { loginLimiter } from "../utils/rate.limiter";
+import { signupSchema } from "../validators/auth.schema";
 
 const route = require("express").Router();
 
-route.post("/signup", signUpUser, loginLimiter);
+route.post("/signup", validate(signupSchema), signUpUser, loginLimiter);
 
 export default route;

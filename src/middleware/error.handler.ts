@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import logger from "../utils/logger";
 import constants from "../utils/constants";
-import { errorResponse } from "../utils/response"; // ✅ import your util
+import { errorResponse } from "../utils/response";
 
 const errorHandler = (
   err: any,
@@ -9,8 +9,15 @@ const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  const statusCode = res.statusCode !== 200 ? res.statusCode : 500;
+  //  prioritize err.statusCode over res.statusCode
+  const statusCode =
+    err.statusCode && Number.isInteger(err.statusCode)
+      ? err.statusCode
+      : res.statusCode !== 200
+      ? res.statusCode
+      : 500;
 
+  //  log error
   logger.error(err.stack || err.message);
 
   switch (statusCode) {
@@ -27,10 +34,18 @@ const errorHandler = (
       return errorResponse(res, err.message || "Not found", statusCode);
 
     case constants.UNPROCESSABLE_ENTITY:
-      return errorResponse(res, err.message || "Unprocessable Entity", statusCode);
+      return errorResponse(
+        res,
+        err.message || "Unprocessable Entity",
+        statusCode
+      );
 
     default:
-      return errorResponse(res, err.message || "Internal Server Error", 500);
+      return errorResponse(
+        res,
+        err.message || "Internal Server Error",
+        statusCode
+      );
   }
 };
 

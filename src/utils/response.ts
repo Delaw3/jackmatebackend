@@ -30,3 +30,14 @@ export const errorResponse = (
 
   return res.status(statusCode).json(response);
 };
+
+// utils/apiError.ts
+export class customError extends Error {
+  statusCode: number;
+
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
