@@ -5,6 +5,6 @@ import { signupSchema } from "../validators/auth.schema";
 
 const route = require("express").Router();
 
-route.post("/signup", validate(signupSchema), signUpUser, loginLimiter);
+route.post("/signup", validate(signupSchema), signUpUser);
 
 export default route;

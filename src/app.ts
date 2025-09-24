@@ -23,7 +23,7 @@ export const createApp = () => {
 
   // Morgan + Winston
   app.use(morganLogger);
-  app.use( loginLimiter, globalRateLimiter );
+  // app.use( loginLimiter, globalRateLimiter );
 
   // Routes
   app.use("/api/auth", authRoutes);
