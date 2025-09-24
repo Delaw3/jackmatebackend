@@ -1,6 +1,7 @@
 import { createApp } from "./app";
 import { config } from "./config/config";
-import dbConnect from "./config/db.config";
+import { dbConnect } from "./config/db.config";
+
 
 async function bootstrap() {
   try {

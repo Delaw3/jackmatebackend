@@ -1,24 +1,26 @@
 import mongoose from "mongoose";
-import { config } from "./config";
-import { customError } from "../utils/response";
 
 let cachedDb: typeof mongoose | null = null;
-const dbString = config.mongoUri
 
 export const dbConnect = async () => {
-  if (cachedDb) return cachedDb;
+  if (cachedDb && mongoose.connection.readyState === 1) return cachedDb;
 
-  if (!dbString) throw new customError("DB_STRING not set", 404);
+  if (!process.env.DB_STRING) throw new Error("DB_STRING not set");
 
-  const connect = await mongoose.connect(dbString, {
-    serverSelectionTimeoutMS: 5000, // fail fast if cannot connect
-    bufferCommands: false, // disables indefinite buffering
-    maxPoolSize: 5, // reuse connections
-  });
+  try {
+    const connect = await mongoose.connect(process.env.DB_STRING, {
+      serverSelectionTimeoutMS: 5000,
+      bufferCommands: false,
+      maxPoolSize: 5,
+    });
 
-  cachedDb = connect;
-  console.log("Connected to DB:", connect.connection.name);
-  return connect;
+    cachedDb = connect;
+    console.log("Connected to DB:", connect.connection.name);
+    return connect;
+  } catch (error) {
+    console.error("MongoDB connection failed:", error);
+    cachedDb = null; // reset cache on failure
+    throw error;
+  }
 };
 
-export default dbConnect;
