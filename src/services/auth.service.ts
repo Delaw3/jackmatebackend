@@ -1,7 +1,10 @@
 import logger from "../utils/logger";
 
-export class auth {
-    signUp(){
-        logger.info("User signed up");
+export class authService {
+    constructor() {}
+
+    async signUp(email: string, password: string) {
+
     }
+        
 }

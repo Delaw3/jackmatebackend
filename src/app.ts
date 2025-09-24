@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morganLogger from "./utils/morgan.logger";
-import { rateLimiter } from "./utils/rate.limiter";
+import { globalRateLimiter, loginLimiter } from "./utils/rate.limiter";
 import authRoutes from "./router/auth.route";
 
 
@@ -17,7 +17,7 @@ export const createApp = () => {
 
   // Morgan + Winston
   app.use(morganLogger);
-  app.use(rateLimiter);
+  app.use( loginLimiter, globalRateLimiter );
 
   // Routes
   app.use("/api/auth", authRoutes);
