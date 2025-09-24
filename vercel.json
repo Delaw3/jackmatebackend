@@ -1,4 +1,10 @@
 {
+  "functions": {
+    "api/**/*.ts": {
+      "maxDuration": 10,
+      "memory": 1024
+        }
+    },
   "version": 2,
   "builds": [
     { "src": "api/index.ts", "use": "@vercel/node" }
