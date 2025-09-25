@@ -24,7 +24,7 @@ const errorHandler = (
     case constants.VALIDATION_ERROR:
       return errorResponse(res, err.message || "Validation error", statusCode);
 
-    case constants.UNAUTHORIIZE:
+    case constants.UNAUTHORIZED:
       return errorResponse(res, err.message || "Unauthorized", statusCode);
 
     case constants.FORBIDDEN:
