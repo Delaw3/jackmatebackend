@@ -26,13 +26,6 @@ export const createApp = () => {
   app.use(morganLogger);
   app.use(  globalRateLimiter );
 
-  app.use((req, res, next) => {
-    logger.info("Headers:", req.headers);
-    logger.info("Content-Length:", req.headers["content-length"]);
-    logger.info("Method:", req.method, "URL:", req.url);
-    next();
-  });
-
 
   // Routes
   app.use("/api/auth", authRoutes);
