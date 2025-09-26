@@ -12,7 +12,7 @@ redis.on("connect", () => {
 });
 
 redis.on("error", (err) => {
-  console.error("Redis Error:", err);
+  logger.error("Redis Error:", err);
 });
 
 export async function initRedis() {

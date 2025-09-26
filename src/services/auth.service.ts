@@ -4,8 +4,12 @@ import logger from "../utils/logger";
 import jwt from "jsonwebtoken";
 import { comparePassword, hashPassword } from "../utils/password.util";
 import { customError, errorResponse } from "../utils/response";
-import { generateToken } from "../utils/jwt.util";
+import { generateToken, verifyToken } from "../utils/jwt.util";
 import { IUser } from "../interfaces/user.interface";
+import { otpService } from "./otp.service";
+import { sendMail } from "./email.service";
+import { config } from "../config/config";
+
 
 export class AuthService {
     constructor() {}
@@ -53,7 +57,49 @@ export class AuthService {
         throw new customError("Invalid credentials", constants.UNAUTHORIZED);
     }
 
+    async forgetPassword(email: string) {
+        const user = await UserModel.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            throw new customError("User does not exist", constants.NOT_FOUND);
+        };
+        // Generate otp
+        const otp = otpService.generateOtp();
+        await otpService.setOtp(email, otp);
 
-    
+        // Send OTP via email
+        sendMail(email, "Password Reset OTP", `Your OTP is ${otp}. It is valid for 5 minutes.`)
+
+        return true;
+    }
+
+    async verifyOtp(otp: string) {
+        const email = await otpService.verifyOtp(otp);
+        if (!email) {
+            throw new customError("Invalid or expired OTP", constants.VALIDATION_ERROR);
+        };
+        const resetToken =  jwt.sign(
+            {email},
+            config.jwtSecret as string,
+            {expiresIn: '10m'}
+            
+        ) // short-lived token for resetting password 
+
+        return { resetToken: resetToken };
+
+    }
+
+    async resetPassword(resetToken: string, newPassword: string) {
+        const payload = verifyToken(resetToken) as { email?: string };
+        const user = await UserModel.findOne({ email: payload.email?.toLowerCase() });
+        if (!user) {
+            throw new customError("User does not exist", constants.NOT_FOUND);
+        };
+        const hash = await hashPassword(newPassword) 
+        user.password = hash;
+        await user.save();
+        return true;
+    }   
         
 }
+
+export const authService = new AuthService();
