@@ -32,8 +32,14 @@ export class AuthService {
         await user.save()
         const userObj = user.toObject() as any
         delete userObj.password
+        const token = generateToken (
+            {
+                _id: userObj._id,
+                email: user.email
+            }
+        )
         logger.info(`New user registered: ${email}`);
-        return userObj;
+        return {...userObj, token};
 
     }
 
