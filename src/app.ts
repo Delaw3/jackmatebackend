@@ -5,6 +5,7 @@ import morganLogger from "./utils/morgan.logger";
 import { globalRateLimiter, loginLimiter } from "./utils/rate.limiter";
 import authRoutes from "./router/auth.route";
 import errorHandler from "./middleware/error.handler";
+import onBoardingRoutes from "./router/onboarding.route";
 import logger from "./utils/logger";
 
 
@@ -29,6 +30,7 @@ export const createApp = () => {
 
   // Routes
   app.use("/api/auth", authRoutes);
+  app.use("/api/onboarding", onBoardingRoutes);
 
 
   app.use(errorHandler)

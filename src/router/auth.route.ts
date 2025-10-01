@@ -1,7 +1,7 @@
 import { forgetPassword, resetPassword, signInUser, signUpUser, verifyOtp } from "../controllers/auth.controller";
 import { validate } from "../middleware/validate";
 import { loginLimiter } from "../utils/rate.limiter";
-import { forgetPasswordSchema, loginSchema, resetPasswordSchema, signupSchema, verifyOtpSchema } from "../validators/auth.schema";
+import { forgetPasswordSchema, loginSchema, resetPasswordSchema, signupSchema, verifyOtpSchema } from "../validators/schema";
 
 const route = require("express").Router();
 

@@ -1,7 +1,7 @@
 import { Request } from "express";
 
 export interface IUser extends Document {
-  id: string;
+  _id: string;
   email: string;
   password: string;
 }

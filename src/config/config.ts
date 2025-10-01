@@ -16,6 +16,7 @@ export const config = {
   emailPassword: process.env.PASSWORD,
   smtphost: process.env.SMTP_HOST,
   smtpport: process.env.SMTP_PORT,
+  universitiesApiUrl: process.env.UNIVERSITIES_API_URL,
 
 
 };

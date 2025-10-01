@@ -32,7 +32,6 @@ export const validateToken = asyncHandler(
 
       const user = await UserModel.findById(decoded._id);
       if (!user) {
-        logger.warn(`Unauthorized request: User not found (id=${decoded._id})`);
         return errorResponse(res, "User not found, authorization denied!", constants.UNAUTHORIIZE);
       }
 
