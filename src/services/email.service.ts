@@ -1,31 +1,20 @@
-import nodemailer from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
+import sgMail from "@sendgrid/mail";
 import logger from "../utils/logger";
 import { config } from "../config/config";
 
-const transporter = nodemailer.createTransport({
-  host: config.smtphost,
-  port: config.smtpport,
-  secure: true, // SSL
-  auth: {
-    user: "apikey",
-    pass: config.emailPassword,
-  },
-} as SMTPTransport.Options);
+sgMail.setApiKey(config.emailPassword || ""); // API key
 
-export const sendMail = async (to: string, subject: string, text: string): Promise<void> => {
-  const mailOptions = {
-    from: config.email,
-    to,
-    subject,
-    text,
-  };
-
+export const sendMail = async (to: string, subject: string, text: string) => {
   try {
-    const info = await transporter.sendMail(mailOptions);
-    logger.info("Email sent: " + info.response);
+    await sgMail.send({
+      to,
+      from: config.email || "", // must be verified sender in SendGrid
+      subject,
+      text,
+    });
+    logger.info(`Email sent to ${to}`);
   } catch (error) {
     logger.error("Error sending email:", error);
-    throw error; // so the controller can handle it
+    throw new Error("Failed to send email");
   }
 };
