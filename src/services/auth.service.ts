@@ -72,8 +72,13 @@ export class AuthService {
         const otp = otpService.generateOtp();
         await otpService.setOtp(email, otp);
 
-        // Send OTP via email
-        sendMail(email, "Password Reset OTP", `Your OTP is ${otp}. It is valid for 5 minutes.`)
+           // Send OTP via email (awaited)
+        try {
+            await sendMail(email, "Password Reset OTP", `Your OTP is ${otp}. It is valid for 5 minutes.`);
+        } catch (error) {
+            console.error("Email sending failed:", error);
+            throw new customError("Failed to send OTP email. Please try again later.", 500);
+        }
 
         return true;
     }
