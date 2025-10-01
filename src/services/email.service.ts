@@ -6,7 +6,7 @@ import { config } from "../config/config";
 const transporter = nodemailer.createTransport({
   host: config.smtphost,
   port: config.smtpport,
-  secure: false, // SSL
+  secure: true, // SSL
   auth: {
     user: config.email,
     pass: config.emailPassword,
