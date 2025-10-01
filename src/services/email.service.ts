@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
   port: config.smtpport,
   secure: true, // SSL
   auth: {
-    user: config.email,
+    user: "apikey",
     pass: config.emailPassword,
   },
 } as SMTPTransport.Options);
