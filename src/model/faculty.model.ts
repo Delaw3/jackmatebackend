@@ -9,6 +9,6 @@ const FacultySchema = new Schema<FacultyDocument>(
   },
   { timestamps: true }
 );
-FacultySchema.index({ name: 1 }, { unique: true });
+
 
 export const FacultyModel = model<FacultyDocument>("Faculty", FacultySchema);

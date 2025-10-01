@@ -5,7 +5,7 @@ import { config } from "../config/config";
 import constants from "../utils/constants";
 import logger from "../utils/logger";
 import { errorResponse } from "../utils/response";
-import UserModel from "../model/auth.model";
+import UserModel from "../model/user.model";
 import { asyncHandler } from "../utils/async.handler";
 import { IUser, URequest } from "../interfaces/user.interface";
 import { verifyToken } from "../utils/jwt.util";

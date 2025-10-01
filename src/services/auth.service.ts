@@ -1,4 +1,4 @@
-import UserModel from "../model/auth.model";
+import UserModel from "../model/user.model";
 import constants from "../utils/constants";
 import logger from "../utils/logger";
 import jwt from "jsonwebtoken";

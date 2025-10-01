@@ -53,3 +53,28 @@ export const addDepartmentSchema = Joi.object({
     "any.required": "Department name is required",
   }),
 });
+
+
+
+export const saveOnboardingSchema = Joi.object({
+  universityId: Joi.string().length(24).required().messages({
+    "string.length": "Invalid university ID",
+    "any.required": "University ID is required",
+  }),
+  facultyId: Joi.string().length(24).required().messages({
+    "string.length": "Invalid faculty ID",
+    "any.required": "Faculty ID is required",
+  }),
+  departmentId: Joi.string().length(24).required().messages({
+    "string.length": "Invalid department ID",
+    "any.required": "Department ID is required",
+  }),
+  levelId: Joi.string().length(24).required().messages({
+    "string.length": "Invalid level ID",
+    "any.required": "Level ID is required",
+  }),
+  semesterId: Joi.string().length(24).required().messages({
+    "string.length": "Invalid semester ID",
+    "any.required": "Semester ID is required",
+  }),
+});

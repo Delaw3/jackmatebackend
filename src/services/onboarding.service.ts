@@ -3,11 +3,15 @@ import axiosRetry from "axios-retry";
 import UniversityModel from "../model/universities.model";
 import { customError } from "../utils/response";
 import constants from "../utils/constants";
-import UserModel from "../model/auth.model";
+import UserModel from "../model/user.model";
 import { paginate } from "../utils/pagination.util";
 import { FacultyModel } from "../model/faculty.model";
 import { DepartmentModel } from "../model/dept.model";
 import { Types } from "mongoose";
+import SemesterModel from "../model/semester.model";
+import LevelModel from "../model/level.model";
+import OnboardingModel from "../model/onboarding.model";
+import { generateStudentId } from "../utils/studentid.utils";
 
 // enable retry with exponential backoff
 axiosRetry(axios, {
@@ -296,6 +300,70 @@ async getUniversityWithFaculties (userId:string, universityId: string) {
 
     return result[0] || null;
     };
+
+    async getLevels(userId:string) {
+        await this.checkUserExists(userId);
+        const levels = await LevelModel.find().sort({ name: 1 });
+        return levels;
+    }
+
+    async getSemesters(userId:string) {
+        await this.checkUserExists(userId);
+        const semesters = await SemesterModel.find().sort({ name: 1 });
+        return semesters;
+    }
+
+
+async saveOnboarding(
+  userId: string,
+  universityId: string,
+  facultyId: string,
+  departmentId: string,
+  levelId: string,
+  semesterId: string
+) {
+  await this.checkUserExists(userId);
+
+  const existing = await OnboardingModel.findOne({ user: userId });
+  if (existing) {
+    // update existing onboarding
+    existing.university = new Types.ObjectId(universityId);
+    existing.faculty = new Types.ObjectId(facultyId);
+    existing.department = new Types.ObjectId(departmentId);
+    existing.level = new Types.ObjectId(levelId);
+    existing.semester = new Types.ObjectId(semesterId);
+
+    if (!existing.studentId) {
+      const studentId = await generateStudentId();
+      existing.studentId = studentId;
+      await UserModel.updateOne({ _id: userId }, { studentId });
+    }
+
+    await existing.save();
+    return existing; // return the document directly
+  }
+
+  // generate student ID
+  const studentId = await generateStudentId();
+  console.log("Generated student ID:", studentId);
+
+  // create new onboarding
+  const onboarding = new OnboardingModel({
+    user: new Types.ObjectId(userId),
+    university: new Types.ObjectId(universityId),
+    faculty: new Types.ObjectId(facultyId),
+    department: new Types.ObjectId(departmentId),
+    level: new Types.ObjectId(levelId),
+    semester: new Types.ObjectId(semesterId),
+    studentId
+  });
+
+  await UserModel.updateOne({ _id: userId }, { onboardingCompleted: true, studentId });
+  await onboarding.save();
+
+  return onboarding; // return directly so studentId is included
+}
+
 
 
 }

@@ -1,6 +1,7 @@
 import { createApp } from "./app";
 import { config } from "./config/config";
 import { dbConnect } from "./config/db.config";
+import { seedLevelsAndSemesters } from "./services/levelsemester.service";
 import "./utils/redis.client";
 import { initRedis } from "./utils/redis.client";
 
@@ -8,8 +9,9 @@ import { initRedis } from "./utils/redis.client";
 async function bootstrap() {
   try {
 
-    dbConnect()
+    dbConnect();
     initRedis();
+    await seedLevelsAndSemesters();
 
     const app = createApp();
 

@@ -21,3 +21,24 @@ export interface DepartmentDocument extends Document {
   name: string;
   faculty: Types.ObjectId; // reference to Faculty
 }
+
+export interface ILevel extends Document {
+  name: "100" | "200" | "300" | "400" | "500" | "600";
+}
+
+export interface ISemester extends Document {
+  name: "First Semester" | "Second Semester";
+}
+
+
+export interface IOnboarding extends Document {
+  user: Types.ObjectId;
+  university: Types.ObjectId;
+  faculty: Types.ObjectId;
+  department: Types.ObjectId;
+  level: Types.ObjectId;
+  semester: Types.ObjectId;
+  studentId: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

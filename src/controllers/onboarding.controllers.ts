@@ -86,3 +86,31 @@ export const getUniversityDetails = asyncHandler(async(req:URequest, res:Respons
     const universitiesDetails = await onboardingService.getUniversityWithFaculties(userId, universityId);
     return successResponse(res, "University details fetched successfully", universitiesDetails, 200);
 })
+
+export const getLevels = asyncHandler(async(req:URequest, res:Response) =>{
+    const userId = req.user?._id;
+    if (!userId) {
+        return errorResponse(res, "Invalid user ID", 400);
+    }
+    const levels = await onboardingService.getLevels(userId);
+    return successResponse(res, "Levels fetched successfully", levels, 200);
+})
+
+export const getSemesters = asyncHandler(async(req:URequest, res:Response) =>{
+    const userId = req.user?._id;
+    if (!userId) {
+        return errorResponse(res, "Invalid user ID", 400);
+    }
+    const semesters = await onboardingService.getSemesters(userId);
+    return successResponse(res, "Semesters fetched successfully", semesters, 200);
+})
+
+export const onboarding = asyncHandler(async(req:URequest, res:Response) =>{
+    const userId = req.user?._id;
+    if (!userId) {
+        return errorResponse(res, "Invalid user ID", 400);
+    }
+    const { universityId, facultyId, departmentId, levelId, semesterId } = req.body;
+    const onboarding = await onboardingService.saveOnboarding( userId, universityId, facultyId, departmentId, levelId, semesterId);
+    return successResponse(res, "Onboarding completed successfully", onboarding, 200);
+})
